@@ -1,0 +1,29 @@
+import matplotlib.pyplot as plt
+import csv
+from scipy.optimize import curve_fit
+x=[]
+y=[]
+
+with open('теплоемкость.txt', 'r') as csvfile:
+    plots= csv.reader(csvfile, delimiter=',')
+    for row in plots:
+        x.append(float(row[0]))
+        y.append(float(row[1]))
+
+def linear(x, k, b):
+    xnew = [i * k + b for i in x]
+    return xnew
+covariance = curve_fit(linear, x, y)
+k, b = 0.0181, -0.0015
+
+plt.plot(x,y,'.--', label='data')
+plt.plot(x, linear(x, k, b), '-', label='Fit')
+plt.legend()
+
+
+plt.title('Определение теплоемкости')
+plt.grid()
+plt.xlabel('Время, сек')
+plt.ylabel('ln(T(0)-Tc)-ln(T(t)-Tc)')
+
+plt.show()
